@@ -401,7 +401,9 @@ public extension LexicalViewDelegate {
   }
 
   public func hideAccessoryInput(_ hidden: Bool) {
+    #if !os(visionOS)
     textView.inputAccessoryView?.isHidden = hidden
+    #endif
   }
 
   // MARK: - TextView
@@ -454,7 +456,9 @@ public extension LexicalViewDelegate {
   // MARK: - Input Accessory View
 
   public func presentInputAccessoryView(view: UIView) {
+    #if !os(visionOS)
     textView.inputAccessoryView = view
+    #endif
   }
 
   // MARK: - Paragraph Menu
