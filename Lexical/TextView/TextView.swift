@@ -5,7 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if canImport(MobileCoreServices)
 import MobileCoreServices
+#endif
 import UIKit
 import UniformTypeIdentifiers
 
@@ -153,9 +155,11 @@ protocol LexicalTextViewDelegate: NSObjectProtocol {
           return true
         }
       } else {
+        #if canImport(MobileCoreServices)
         if !(pasteboard.data(forPasteboardType: (kUTTypeUTF8PlainText as String))?.isEmpty ?? true) {
           return true
         }
+        #endif
       }
       return super.canPerformAction(action, withSender: sender)
     } else {

@@ -6,7 +6,9 @@
  */
 
 import Foundation
+#if canImport(MobileCoreServices)
 import MobileCoreServices
+#endif
 import UIKit
 import UniformTypeIdentifiers
 
@@ -35,6 +37,7 @@ internal func setPasteboard(selection: BaseSelection, pasteboard: UIPasteboard) 
         [LexicalConstants.pasteboardIdentifier: encodedData],
       ]
   } else {
+    #if canImport(MobileCoreServices)
     pasteboard.items =
       [
         [
@@ -44,6 +47,7 @@ internal func setPasteboard(selection: BaseSelection, pasteboard: UIPasteboard) 
         ],
         [LexicalConstants.pasteboardIdentifier: encodedData],
       ]
+    #endif
   }
 }
 
@@ -58,6 +62,7 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
       ]
     )
   } else {
+    #if canImport(MobileCoreServices)
     itemSet = pasteboard.itemSet(
       withPasteboardTypes: [
         (kUTTypeUTF8PlainText as String),
@@ -65,6 +70,9 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
         LexicalConstants.pasteboardIdentifier,
       ]
     )
+    #else
+    itemSet = nil
+    #endif
   }
 
   if let pasteboardData = pasteboard.data(
@@ -93,6 +101,7 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
       return
     }
   } else {
+    #if canImport(MobileCoreServices)
     if let pasteboardRTFData = pasteboard.data(
       forPasteboardType: (kUTTypeRTF as String),
       inItemSet: itemSet)?.last
@@ -106,6 +115,7 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
       try insertRTF(selection: selection, attributedString: attributedString)
       return
     }
+    #endif
   }
 
   if #available(iOS 14.0, *) {
@@ -117,6 +127,7 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
       return
     }
   } else {
+    #if canImport(MobileCoreServices)
     if let pasteboardStringData = pasteboard.data(
       forPasteboardType: (kUTTypeUTF8PlainText as String),
       inItemSet: itemSet)?.last
@@ -124,6 +135,7 @@ internal func insertDataTransferForRichText(selection: RangeSelection, pasteboar
       try insertPlainText(selection: selection, text: String(decoding: pasteboardStringData, as: UTF8.self))
       return
     }
+    #endif
   }
 
   if let url = pasteboard.urls?.first as? URL {
